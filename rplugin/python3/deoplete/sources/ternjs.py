@@ -3,6 +3,7 @@
 import os
 import re
 import json
+import http
 import platform
 import subprocess
 import threading
@@ -225,6 +226,10 @@ class Source(Base):
             message = error.read()
             self.error(message)
         except URLError as error:
+            self._do_nothing = True
+            self.vim.err_write(
+                'Looks like tern was stopped or crashed. Delete .tern-port file and restart [n]vim\n')
+        except http.client.RemoteDisconnected:
             self._do_nothing = True
             self.vim.err_write(
                 'Looks like tern was stopped or crashed. Delete .tern-port file and restart [n]vim\n')
